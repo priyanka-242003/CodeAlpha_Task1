@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🛍️ Simple E-Commerce Store</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+    header {
+      background: #222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .nav-buttons {
+      text-align: center;
+      background-color: #fff;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .nav-buttons button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .nav-buttons button:hover {
+      background-color: #0056b3;
+    }
+    #container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+    .product, .cart-item {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .product img, .cart-item img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .product-details {
+      flex: 1;
+    }
+    .product h2, .cart-item h3 {
+      margin: 0;
+    }
+    .total-price {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    .empty-message {
+      text-align: center;
+      font-style: italic;
+      margin-top: 40px;
+      color: #888;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🛒 Simple E-Commerce Store</h1>
+  </header>
+
+  <div class="nav-buttons">
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('cart')">Cart</button>
+    <button onclick="showPage('register')"> Sign-up / Log-in</button>
+  </div>
+
+  <div id="container"></div>
+
+  <script>
+    const products = [
+  { id: 1, name: "Smartphone", 
+  price: 14999, 
+  description: "Latest model with great features", 
+  image: "smartphone.jpg" 
+ },
+  { id: 2,
+     name: "Smart Watch",
+    price: 4999, description: "Track your fitness and notifications", image: "smartwatch.jpg" },
+  { id: 3, name: "Headphones", price: 2999, description: "Noise cancelling over-ear headphones", image: "headphone.jpg" },
+  { id: 4, name: "Digital Voice Recorder", price: 4999, description: "Capture meetings, lectures, or memos with clear sound.", image: "voicerecoder.jpg" },
+  { id: 5, name: "Wireless Earbuds", price: 2199, description: "Crystal-clear sound with long-lasting battery.", image: "earbuds.jpg" },
+  { id: 6, name: "4K Ultra HD TV", price: 28999, description: "Cinematic experience at home.", image: "tv.jpg" },
+  { id: 7, name: "Wireless Gaming Mouse", price: 1199, description: "High precision, customizable buttons, and RGB lighting.", image: "mouse.jpg" },
+  { id: 8, name: "Portable Mini Projector", price: 5499, description: "Project movies anywhere with this compact device.", image: "projector.webp" },
+  { id: 9, name: "Smart Home Plug", price: 999, description: "Control any device remotely via app or voice assistant.", image: "homeplug.jpg" },
+  { id: 10, name: "1080p Webcam", price: 1599, description: "Clear HD video for meetings and streaming.", image: "webcam.jpg" },
+  { id: 11, name: "Wireless Keyboard & Mouse Set", price: 1499, description: "Sleek and quiet typing with reliable connectivity.", image: "wirelesskeyboard.jpg" },
+  { id: 12, name: "Solar Power Bank (10,000mAh)", price: 3999, description: "Charge your devices even when off the grid.", image: "solarpowerbank.jpg" },
+  { id: 13, name: "Portable Air Purifier", price: 2499, description: "Breathe clean air wherever you go.", image: "airpurifier.jpg" },
+  { id: 14, name: "Smart Doorbell Camera", price: 3499, description: "See who is at your door from anywhere in real time.", image: "doorbellcamera.jpg" },
+  { id: 15, name: "Digital Drawing Tablet", price: 4257, description: "Create art with precision on a pressure-sensitive surface.", image: "tablet.jpg" },
+  { id: 16, name: "VR Headset", price: 1499, description: "Dive into virtual worlds with 360° immersive experience.", image: "vr.jpg" },
+  { id: 17, name: "External Hard Drive (1TB)", price: 4299, description: "Store all your files securely and carry them anywhere.", image: "harddrive.jpg" },
+  { id: 18, name: "USB-C Fast Charger (65W)", price: 1299, description: "Charge your laptop and phone at lightning speed.", image: "charger.jpg" },
+  { id: 19, name: "Action Camera 4K", price: 6499, description: "Capture adventures in stunning 4K resolution.", image: "actioncamera.jpg" },
+  { id: 20, name: "Car Bluetooth Audio Receiver", price: 1799, description: "Turn any car into a smart audio system.", image: "carbluetooth.jpg" }
+];
+
+
+    const container = document.getElementById('container');
+
+    function showPage(page, id = null) {
+      container.innerHTML = '';
+      if (page === 'home') {
+        products.forEach(p => {
+          container.innerHTML += `
+            <div class="product">
+              <img src="${p.image}" alt="${p.name}">
+              <div class="product-details">
+                <h2>${p.name}</h2>
+                <p>${p.description}</p>
+                <p>₹${p.price}</p>
+                <button onclick="showPage('detail', ${p.id})">View Details</button>
+                <button onclick="addToCart(${p.id})">Add to Cart</button>
+              </div>
+            </div>
+          `;
+        });
+      } else if (page === 'detail') {
+        const product = products.find(p => p.id === id);
+        container.innerHTML = `
+          <div class="product">
+            <img src="${product.image}" alt="${product.name}">
+            <div class="product-details">
+              <h2>${product.name}</h2>
+              <p>${product.description}</p>
+              <p>₹${product.price}</p>
+              <button onclick="addToCart(${product.id})">Add to Cart</button>
+              <button onclick="showPage('home')">Back to Products</button>
+            </div>
+          </div>
+        `;
+      } else if (page === 'cart') {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length === 0) {
+          container.innerHTML = '<p class="empty-message">🛒 Your cart is empty.</p>';
+        } else {
+          let total = 0;
+          cart.forEach(id => {
+            const p = products.find(prod => prod.id === id);
+            total += p.price;
+            container.innerHTML += `
+              <div class="cart-item">
+                <img src="${p.image}" alt="${p.name}">
+                <div class="product-details">
+                  <h3>${p.name}</h3>
+                  <p>Price: ₹${p.price}</p>
+                </div>
+              </div>
+            `;
+          });
+          container.innerHTML += `<p class="total-price">Total: ₹${total}</p>`;
+          container.innerHTML += `<button onclick="checkout()">Proceed to Checkout</button>`;
+        }
+      } else if (page === 'register') {
+        container.innerHTML = `
+          <div class="product">
+            <div class="product-details">
+              <h2>👤 User Registration</h2>
+              <input type="text" id="regName" placeholder="Your Name" required>
+              <input type="email" id="regEmail" placeholder="Email Address" required>
+              <input type="password" id="regPassword" placeholder="Password" required>
+              <button onclick="submitRegistration()">Register</button>
+              <button onclick="showPage('home')">Cancel</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function addToCart(id) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (!cart.includes(id)) {
+        cart.push(id);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert('✅ Added to cart!');
+      } else {
+        alert('⚠️ Item already in cart!');
+      }
+    }
+
+    function checkout() {
+      alert('🎉 Order placed successfully!');
+      localStorage.removeItem('cart');
+      showPage('home');
+    }
+
+    function submitRegistration() {
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+
+      fetch('http://localhost:8000/api/register/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message) {
+          alert('✅ Registration successful!');
+          showPage('home');
+        } else {
+          alert('❌ Registration failed:\n' + JSON.stringify(data));
+        }
+      })
+      .catch(err => {
+        alert('⚠️ Failed to connect to backend.');
+        console.error(err);
+      });
+    }
+
+    // Load home page on start
+    showPage('home');
+  </script>
+
+</body>
+</html>
